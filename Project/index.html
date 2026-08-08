@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield · Safe. Secure. Trusted e-Commerce Protection</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Font Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Chart.js CDN for EDA Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ─── MAIN LANDING CARD ─── -->
+  <div class="shield-card" id="mainCard">
+    <div class="brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>FraudShield <span>· Safe. Secure. Trusted.</span></h1>
+    </div>
+    
+    <div class="tagline">
+      <h2><i class="fas fa-chevron-right"></i> Smart AI Fraud Detection & Verification</h2>
+      <div class="trust-badge">
+        <span><i class="fas fa-check-circle"></i> 99.9% Accuracy</span>
+        <span><i class="fas fa-lock"></i> SSL &amp; TLS Secure</span>
+        <span><i class="fas fa-user-shield"></i> Biometric Verified</span>
+      </div>
+    </div>
+
+    <div class="welcome">
+      <h3><i class="fas fa-store-alt"></i> Welcome to FraudShield on ShopEase</h3>
+      <p>FraudShield safeguards buyer &amp; seller transactions in real time using machine learning, biometric verification, and automated anomaly risk scoring.</p>
+    </div>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-icon"><i class="fas fa-user"></i></div>
+        <h4>Customer</h4>
+        <p>Shop with confidence, track orders in real-time, safeguard payment details, and manage dispute-free returns with FraudShield biometric authentication.</p>
+        <div class="role-btn-group">
+          <button class="role-btn customer-btn" onclick="openRegister('Customer')">
+            Register <i class="fas fa-user-plus"></i>
+          </button>
+          <button class="role-btn secondary" onclick="openLoginForRole('Customer')">
+            Login <i class="fas fa-sign-in-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-icon"><i class="fas fa-store"></i></div>
+        <h4>Seller</h4>
+        <p>Protect your store against chargeback fraud, verify high-risk orders, access real-time fraud rate analytics, and manage payouts safely.</p>
+        <div class="role-btn-group">
+          <button class="role-btn seller-btn" onclick="openRegister('Seller')">
+            Register <i class="fas fa-store"></i>
+          </button>
+          <button class="role-btn secondary" onclick="openLoginForRole('Seller')">
+            Login <i class="fas fa-sign-in-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <span><i class="fas fa-shield-virus"></i> AI-powered Fraud Risk Model</span>
+      <span><i class="fas fa-clock"></i> 24/7 Real-Time Anomaly Monitoring</span>
+      <span><i class="fas fa-fingerprint"></i> Biometric Identity Verification</span>
+    </div>
+  </div>
+
+  <!-- ─── REGISTER OVERLAY ─── -->
+  <div class="overlay" id="registerOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2><i class="fas fa-user-plus"></i> <span id="modalRoleTitle">Customer</span> <span class="role-badge" id="roleBadge">Registration</span></h2>
+        <button class="close-btn" onclick="closeRegister()"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="registerForm" onsubmit="submitRegistration(event)">
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your full name" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Password</label>
+          <input type="password" id="password" placeholder="Create a strong password" required minlength="6" />
+        </div>
+        <div class="form-group address-field" id="addressGroup">
+          <label><i class="fas fa-map-pin"></i> Shipping Address</label>
+          <textarea id="address" placeholder="Enter your shipping address"></textarea>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-network-wired"></i> IP Address <span style="font-weight:400; font-size:0.8rem; opacity:0.7;">(auto-detected)</span></label>
+          <div class="ip-display"><i class="fas fa-wifi"></i><span id="ipAddress">Detecting network IP...</span></div>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-fingerprint"></i> Biometric Verification <span style="font-weight:400; font-size:0.8rem; opacity:0.7;">(first-time security capture)</span></label>
+          <div class="bio-group">
+            <button type="button" class="bio-btn face" id="faceBtn" onclick="startFaceCapture()"><i class="fas fa-camera"></i> Face ID</button>
+            <button type="button" class="bio-btn finger" id="fingerBtn" onclick="startFingerprintScan()"><i class="fas fa-fingerprint"></i> Fingerprint</button>
+          </div>
+          <div class="bio-status" id="bioStatus"><i class="fas fa-info-circle"></i><span class="status-msg">Awaiting biometric capture</span></div>
+        </div>
+        <button type="submit" class="submit-btn"><i class="fas fa-shield-halved"></i> Complete Registration</button>
+        <div class="switch-auth">Already registered? <a onclick="switchToLogin()">Login here</a></div>
+        <div style="margin-top: 1rem; text-align: center;">
+          <div style="display:flex; align-items:center; margin:0.8rem 0; color:#94a3b8; font-size:0.8rem;">
+            <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+            <span style="padding:0 10px; font-weight:600;">OR</span>
+            <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+          </div>
+          <button type="button" onclick="loginWithGoogle()" style="width:100%; padding:0.65rem 1rem; border-radius:12px; border:1px solid #cbd5e1; background:#ffffff; color:#334155; font-size:0.88rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 1px 3px rgba(0,0,0,0.05); transition:all 0.2s;">
+            <i class="fab fa-google" style="color:#ea4335; font-size:1.1rem;"></i> Sign up with Gmail / Google
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── LOGIN OVERLAY ─── -->
+  <div class="overlay" id="loginOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2><i class="fas fa-sign-in-alt"></i> Login to FraudShield</h2>
+        <button class="close-btn" onclick="closeLogin()"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="loginAlertContainer"></div>
+      <form id="loginForm" onsubmit="submitLogin(event)">
+        <div class="role-selector">
+          <button type="button" id="loginCustomerBtn" class="active customer-active" onclick="setLoginRole('Customer')"><i class="fas fa-user"></i> Customer</button>
+          <button type="button" id="loginSellerBtn" onclick="setLoginRole('Seller')"><i class="fas fa-store"></i> Seller</button>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user-tag"></i> Email Address / Username</label>
+          <input type="text" id="loginEmail" placeholder="you@example.com or username" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password" required minlength="6" />
+        </div>
+        <button type="submit" class="submit-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div class="switch-auth">Need a new account? <a onclick="switchToRegister()">Register here</a></div>
+        <div style="margin-top: 1rem; text-align: center;">
+          <div style="display:flex; align-items:center; margin:0.8rem 0; color:#94a3b8; font-size:0.8rem;">
+            <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+            <span style="padding:0 10px; font-weight:600;">OR</span>
+            <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+          </div>
+          <button type="button" onclick="loginWithGoogle()" style="width:100%; padding:0.65rem 1rem; border-radius:12px; border:1px solid #cbd5e1; background:#ffffff; color:#334155; font-size:0.88rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 1px 3px rgba(0,0,0,0.05); transition:all 0.2s;">
+            <i class="fab fa-google" style="color:#ea4335; font-size:1.1rem;"></i> Continue with Gmail / Google
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── CAMERA OVERLAY ─── -->
+  <div class="camera-overlay" id="cameraOverlay">
+    <div class="camera-box">
+      <h3><i class="fas fa-camera" style="color:#2a9d8f;"></i> Face ID Capture</h3>
+      <video id="video" autoplay playsinline></video>
+      <div class="cam-preview" id="camPreview">
+        <img id="capturedImage" alt="Captured face preview" />
+        <div class="preview-actions">
+          <button class="preview-confirm" onclick="confirmFace()"><i class="fas fa-check"></i> Confirm</button>
+          <button class="preview-retry" onclick="retryCapture()"><i class="fas fa-redo"></i> Retake</button>
+        </div>
+      </div>
+      <div class="cam-actions" id="camActions">
+        <button class="cam-capture" onclick="captureFace()"><i class="fas fa-camera"></i> Capture</button>
+        <button class="cam-close" onclick="closeCamera()"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+      <div class="cam-hint" id="camHint">Position your face in the frame and click Capture</div>
+    </div>
+  </div>
+
+  <!-- ─── FINGERPRINT OVERLAY (PHOTO UPLOAD & SENSOR SCAN) ─── -->
+  <div class="fingerprint-overlay" id="fingerprintOverlay">
+    <div class="fingerprint-box" style="max-width:480px; width:90%; padding:2rem; border-radius:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:8px; color:#0f172a;">
+          <i class="fas fa-fingerprint" style="color:#10b981;"></i> Biometric Thumb Fingerprint Scanner
+        </h3>
+        <button onclick="closeFingerprint()" style="background:none; border:none; color:#64748b; font-size:1.2rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">
+        Upload a clear picture of your thumb fingerprint or touch the sensor pad below to automatically scan and verify your identity.
+      </p>
+
+      <!-- Mode Toggle Buttons -->
+      <div style="display:flex; gap:0.6rem; margin-bottom:1.2rem; background:#f1f5f9; padding:4px; border-radius:12px;">
+        <button type="button" id="thumbUploadModeBtn" onclick="switchFingerprintMode('upload')" style="flex:1; padding:0.55rem; border-radius:10px; border:none; background:#ffffff; color:#0f172a; font-weight:700; font-size:0.82rem; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; gap:6px;">
+          <i class="fas fa-upload" style="color:#10b981;"></i> Upload Thumb Picture
+        </button>
+        <button type="button" id="thumbTouchModeBtn" onclick="switchFingerprintMode('touch')" style="flex:1; padding:0.55rem; border-radius:10px; border:none; background:transparent; color:#64748b; font-weight:600; font-size:0.82rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <i class="fas fa-hand-pointer"></i> Sensor Touch Pad
+        </button>
+      </div>
+
+      <!-- Upload Thumb Section -->
+      <div id="thumbUploadContainer" style="display:block; text-align:center;">
+        <label for="thumbFileInput" style="display:block; padding:1.5rem; border:2px dashed #a7f3d0; background:#f0fdf4; border-radius:18px; cursor:pointer; transition:all 0.2s;" ondragover="event.preventDefault()" ondrop="handleThumbDrop(event)">
+          <input type="file" id="thumbFileInput" accept="image/*" onchange="handleThumbPhotoUpload(event)" style="display:none;" />
+          <div id="thumbPreviewArea">
+            <i class="fas fa-cloud-arrow-up" style="font-size:2.2rem; color:#10b981; margin-bottom:0.5rem; display:block;"></i>
+            <span style="font-weight:700; font-size:0.9rem; color:#065f46; display:block;">Click or Drag &amp; Drop Thumb Picture</span>
+            <small style="color:#047857; font-size:0.78rem;">Upload clear thumb photo (.png, .jpg, .jpeg)</small>
+          </div>
+          <div id="thumbImgDisplayArea" style="display:none; position:relative; overflow:hidden; border-radius:12px;">
+            <img id="thumbUploadedImg" src="" alt="Uploaded Thumb Print" style="max-height:160px; max-width:100%; border-radius:12px; object-fit:contain;" />
+            <div id="thumbLaserScanLine" style="display:none; position:absolute; top:0; left:0; right:0; height:4px; background:#10b981; box-shadow:0 0 12px #10b981, 0 0 20px #10b981; animation:laserScan 1.2s infinite ease-in-out;"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Live Touch Pad Section -->
+      <div id="thumbTouchContainer" style="display:none; text-align:center;">
+        <div class="fingerprint-scanner" id="fingerprintScanner" onclick="placeFingerOnSensor()" style="cursor:pointer; margin:0 auto;" title="Touch pad to place finger for scan">
+          <div class="scan-ring"></div>
+          <i class="fas fa-fingerprint finger-icon"></i>
+        </div>
+      </div>
+
+      <!-- Status Display -->
+      <div class="fingerprint-status" id="fingerprintStatus" style="margin-top:1.2rem; font-weight:600; font-size:0.88rem; color:#334155;">
+        📁 Select &amp; upload your thumb fingerprint picture to scan
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="fingerprint-actions" style="margin-top:1.2rem; display:flex; gap:0.8rem; justify-content:center;">
+        <button class="finger-scan-btn" id="fingerScanBtn" onclick="triggerThumbUploadClick()" style="padding:0.6rem 1.4rem; border-radius:30px; border:none; background:#10b981; color:#fff; font-weight:700; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+          <i class="fas fa-file-upload"></i> Browse Thumb Picture
+        </button>
+        <button class="finger-close-btn" onclick="closeFingerprint()" style="padding:0.6rem 1.2rem; border-radius:30px; border:1px solid #cbd5e1; background:#fff; color:#475569; font-weight:600; cursor:pointer; font-size:0.85rem;">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── PERMISSION ERROR ─── -->
+  <div class="permission-error" id="permissionError">
+    <div class="permission-error-box">
+      <i class="fas fa-camera"></i>
+      <h3>Camera Access Notice</h3>
+      <p>Camera permission was not granted or webcam is unavailable. Would you like to use simulated biometric validation for demonstration?</p>
+      <div style="display:flex; gap:1rem; justify-content:center;">
+        <button class="retry-btn" onclick="retryCameraAccess()"><i class="fas fa-shield-alt"></i> Use Biometric Simulation</button>
+        <button class="cancel-btn" onclick="closePermissionError()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── LOGOUT FLOATING CONFIRMATION ─── -->
+  <div class="logout-float" id="logoutFloat">
+    <div class="logout-float-box">
+      <h3><i class="fas fa-sign-out-alt" style="color:#ef4444;"></i> Confirm Logout</h3>
+      <p>Are you sure you want to exit FraudShield? Your security session will be terminated.</p>
+      <div class="btn-group">
+        <button class="btn-yes" onclick="confirmLogout()"><i class="fas fa-check"></i> Yes, Logout</button>
+        <button class="btn-no" onclick="closeLogoutFloat()"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ADD NEW PRODUCT OVERLAY ─── -->
+  <div class="overlay" id="addProductOverlay">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h2><i class="fas fa-box" style="color:#10b981;"></i> Add New Product</h2>
+        <button class="close-btn" onclick="closeAddProductModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addProductForm" onsubmit="submitAddProduct(event)">
+        <div class="form-group">
+          <label><i class="fas fa-tag"></i> Product Name</label>
+          <input type="text" id="newProdName" placeholder="e.g. Wireless Noise-Cancelling Headphones" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-folder"></i> Category</label>
+          <select id="newProdCat" required>
+            <option value="Electronics">Electronics</option>
+            <option value="Audio">Audio</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Wearables">Wearables</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-indian-rupee-sign"></i> Price (₹)</label>
+          <input type="number" id="newProdPrice" placeholder="e.g. 2499" min="1" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-cubes"></i> Initial Stock Count</label>
+          <input type="number" id="newProdStock" placeholder="e.g. 50" min="1" required />
+        </div>
+        <button type="submit" class="submit-btn" style="background:#10b981;"><i class="fas fa-check"></i> Add Product to Catalog</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── EDIT PRODUCT OVERLAY ─── -->
+  <div class="overlay" id="editProductOverlay">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h2><i class="fas fa-edit" style="color:#6366f1;"></i> Edit Product Details</h2>
+        <button class="close-btn" onclick="closeEditProductModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="editProductForm" onsubmit="submitEditProduct(event)">
+        <div class="form-group">
+          <label><i class="fas fa-hashtag"></i> Product ID</label>
+          <input type="text" id="displayEditProdId" readonly style="background:#f1f5f9; color:#64748b;" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-tag"></i> Product Name</label>
+          <input type="text" id="editProdName" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-indian-rupee-sign"></i> Price (₹)</label>
+          <input type="number" id="editProdPrice" min="1" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-cubes"></i> Stock Count</label>
+          <input type="number" id="editProdStock" min="0" required />
+        </div>
+        <button type="submit" class="submit-btn" style="background:#6366f1;"><i class="fas fa-save"></i> Save Product Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── SELLER REPLY FLOAT BOX OVERLAY ─── -->
+  <div class="overlay" id="replyModalOverlay">
+    <div class="modal" style="max-width:560px;">
+      <div class="modal-header">
+        <h2><i class="fas fa-reply" style="color:#6366f1;"></i> Reply to <span id="replyTargetCustomer">Priya Sharma</span></h2>
+        <button class="close-btn" onclick="closeReplyModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:0.8rem 1rem; margin-bottom:1.2rem; font-size:0.88rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+          <span style="color:#64748b;">Context: <strong id="replyOrderTag" style="color:#0f172a;">#ORD-7832 (Smart Watch X1)</strong></span>
+          <span id="replyRiskBadgeSlot"></span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:0.8rem;">
+        <label style="font-size:0.8rem; font-weight:700; color:#475569; display:block; margin-bottom:0.4rem;">Quick Response Templates:</label>
+        <div class="reply-template-pills">
+          <button type="button" class="template-pill" onclick="applyReplyTemplate('Instant refund approved. Amount will reflect in your account within 2-3 business days.')">Refund Approved</button>
+          <button type="button" class="template-pill" onclick="applyReplyTemplate('Return pickup scheduled for tomorrow. Please keep the original product invoice ready.')">Return Pickup Scheduled</button>
+          <button type="button" class="template-pill" onclick="applyReplyTemplate('Dispatched! Replacement item has been shipped under AWB #9812405.')">Replacement Dispatched</button>
+          <button type="button" class="template-pill" onclick="applyReplyTemplate('Hi, please share a clear photo copy of the serial number tag for warranty verification.')">Request Photo Copy</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-envelope-open-text"></i> Seller Reply Message</label>
+        <textarea id="replyMessageTextarea" rows="4" placeholder="Type your response to the customer..." required></textarea>
+      </div>
+
+      <div style="display:flex; gap:0.8rem; justify-content:flex-end;">
+        <button type="button" onclick="closeReplyModal()" style="padding:0.7rem 1.4rem; border-radius:30px; border:1px solid #ccc; background:#fff; cursor:pointer; font-weight:600;">Cancel</button>
+        <button type="button" onclick="sendReplyToCustomer()" class="submit-btn" style="margin-top:0; width:auto; padding:0.7rem 1.8rem; background:#6366f1;"><i class="fas fa-paper-plane"></i> Send Reply to Customer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SELLER DASHBOARD ─── -->
+  <div class="dashboard-seller" id="dashboardSeller">
+    <div class="dashboard-card-img">
+      
+      <!-- Sidebar -->
+      <div class="img-sidebar">
+        <div class="img-brand-header">
+          <div class="shop-icon"><i class="fas fa-shopping-bag"></i></div>
+          <div>
+            <h1>ShopEase</h1>
+            <span>Seller Security Panel</span>
+          </div>
+        </div>
+        <ul class="img-nav-list" id="sellerNavList">
+          <li class="img-nav-item active" data-section="dashboard" onclick="switchSellerSection('dashboard', this)"><i class="fas fa-th-large"></i> Dashboard</li>
+          <li class="img-nav-item" data-section="orders" onclick="switchSellerSection('orders', this)"><i class="fas fa-shopping-cart"></i> Orders</li>
+          <li class="img-nav-item" data-section="products" onclick="switchSellerSection('products', this)"><i class="fas fa-box"></i> Products</li>
+          <li class="img-nav-item" data-section="analytics" onclick="switchSellerSection('analytics', this)"><i class="fas fa-chart-line"></i> Fraud Analytics</li>
+          <li class="img-nav-item" data-section="risk-detector" onclick="switchSellerSection('risk-detector', this)"><i class="fas fa-shield-virus"></i> Risk Score Engine</li>
+          <li class="img-nav-item" data-section="payouts" onclick="switchSellerSection('payouts', this)"><i class="fas fa-wallet"></i> Payouts</li>
+          <li class="img-nav-item" data-section="returns" onclick="switchSellerSection('returns', this)"><i class="fas fa-undo"></i> Returns &amp; Refunds</li>
+          <li class="img-nav-item" data-section="reviews" onclick="switchSellerSection('reviews', this)"><i class="fas fa-star"></i> Reviews</li>
+          <li class="img-nav-item" data-section="messages" onclick="switchSellerSection('messages', this)"><i class="fas fa-comment-dots"></i> Messages</li>
+          <li class="img-nav-item" data-section="store-settings" onclick="switchSellerSection('store-settings', this)"><i class="fas fa-cog"></i> Settings</li>
+        </ul>
+        <div class="img-sidebar-promo">
+          <h4>FraudShield Active Protection</h4>
+          <p>Real-time machine learning monitoring active for all incoming orders.</p>
+          <button class="img-promo-btn" onclick="switchSellerSection('analytics', document.querySelector('[data-section=\'analytics\']'))"><i class="fas fa-chart-pie"></i> View Reports</button>
+        </div>
+        <div style="padding: 1rem 1.2rem; border-top: 1px solid #f1f5f9;">
+          <button onclick="openLogoutFloat()" style="width:100%; padding:0.6rem; background:#fee2e2; border:none; color:#dc2626; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.85rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      </div>
+
+      <!-- Main Pane -->
+      <div class="img-main-pane">
+        <div class="img-topbar">
+          <div class="img-topbar-left" style="display:flex; align-items:center; gap:1rem; flex:1;">
+            <i class="fas fa-bars"></i>
+            <span style="font-weight:700; font-size:1rem; color:#0f172a; white-space:nowrap;">Seller Console</span>
+            <!-- Universal Topbar Search Bar for Seller -->
+            <div class="section-search-box" style="margin:0 0 0 1rem; width:100%; max-width:480px; border-color:#cbd5e1; background:#ffffff; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+              <i class="fas fa-search" style="color:#6366f1;"></i>
+              <input type="text" id="sellerGlobalSearchInput" onkeyup="filterSellerGlobalSearch(this.value)" placeholder="🔍 Search orders, products, risk matrix, reviews..." />
+            </div>
+          </div>
+          <div class="img-topbar-right">
+            <button class="img-icon-btn"><i class="far fa-bell"></i><span class="img-noti-badge">3</span></button>
+            <div class="img-user-profile" onclick="switchSellerSection('store-settings', null)">
+              <div class="img-user-avatar"><i class="fas fa-store"></i></div>
+              <div class="img-user-info"><span id="sellerName">TechStore</span><small>Verified Seller</small></div>
+              <i class="fas fa-chevron-down" style="font-size: 0.65rem; color: #64748b;"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="img-content-body">
+          <!-- Section 1: Dashboard Overview -->
+          <div id="section-dashboard" class="dashboard-section active-section">
+            <div class="img-welcome-banner">
+              <div>
+                <h2>Welcome back, <span class="seller-user-name-display">Priya Sharma</span>! 👋</h2>
+                <p>Here is your store performance and risk summary for today.</p>
+              </div>
+              <div class="img-date-picker"><i class="far fa-calendar-alt"></i><span>07 May – 13 May 2025</span><i class="fas fa-chevron-down" style="font-size:0.7rem;"></i></div>
+            </div>
+
+            <div class="img-metrics-grid">
+              <div class="img-metric-card">
+                <div class="img-metric-top"><div class="img-metric-icon blue"><i class="fas fa-shopping-bag"></i></div></div>
+                <div class="img-metric-title">Total Sales</div>
+                <div class="img-metric-value">₹1,25,430</div>
+                <div class="img-metric-trend" onclick="switchSellerSection('analytics', null)"><i class="fas fa-arrow-up"></i> 18.6% vs last week</div>
+              </div>
+              <div class="img-metric-card">
+                <div class="img-metric-top"><div class="img-metric-icon green"><i class="fas fa-shopping-cart"></i></div></div>
+                <div class="img-metric-title">Total Orders</div>
+                <div class="img-metric-value">156</div>
+                <div class="img-metric-trend" onclick="switchSellerSection('orders', null)"><i class="fas fa-arrow-up"></i> 12.4% vs last week</div>
+              </div>
+              <div class="img-metric-card">
+                <div class="img-metric-top"><div class="img-metric-icon purple"><i class="fas fa-cube"></i></div></div>
+                <div class="img-metric-title">Units Sold</div>
+                <div class="img-metric-value">312</div>
+                <div class="img-metric-trend"><i class="fas fa-arrow-up"></i> 9.7% vs last week</div>
+              </div>
+              <div class="img-metric-card">
+                <div class="img-metric-top"><div class="img-metric-icon yellow"><i class="fas fa-wallet"></i></div></div>
+                <div class="img-metric-title">Payout Balance</div>
+                <div class="img-metric-value">₹24,560</div>
+                <div class="img-metric-trend" style="color:#6366f1;" onclick="switchSellerSection('payouts', null)">View Payouts <i class="fas fa-arrow-right"></i></div>
+              </div>
+              <div class="img-metric-card">
+                <div class="img-metric-top"><div class="img-metric-icon green"><i class="fas fa-shield-alt"></i></div></div>
+                <div class="img-metric-title">Fraud Prevention</div>
+                <div class="img-metric-value">99.8%</div>
+                <div class="img-metric-trend"><i class="fas fa-check"></i> 0 Chargebacks</div>
+              </div>
+            </div>
+
+            <div class="img-middle-grid">
+              <div class="img-panel-box">
+                <div class="img-panel-header">
+                  <h3>Sales Overview</h3>
+                  <div class="img-dropdown-tag">This Week <i class="fas fa-chevron-down" style="font-size:0.6rem;"></i></div>
+                </div>
+                <div class="img-chart-container">
+                  <svg class="img-chart-svg" viewBox="0 0 600 120" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/>
+                        <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,90 Q100,50 200,75 T400,30 T600,60 L600,120 L0,120 Z" fill="url(#chartGrad)" />
+                    <path d="M0,90 Q100,50 200,75 T400,30 T600,60" fill="none" stroke="#6366f1" stroke-width="2.5" />
+                    <circle cx="0" cy="90" r="3.5" fill="#6366f1"/>
+                    <circle cx="100" cy="65" r="3.5" fill="#6366f1"/>
+                    <circle cx="200" cy="75" r="3.5" fill="#6366f1"/>
+                    <circle cx="300" cy="55" r="3.5" fill="#6366f1"/>
+                    <circle cx="400" cy="30" r="3.5" fill="#6366f1"/>
+                    <circle cx="500" cy="45" r="3.5" fill="#6366f1"/>
+                    <circle cx="600" cy="60" r="3.5" fill="#6366f1"/>
+                  </svg>
+                  <div class="img-chart-labels"><span>07 May</span><span>08 May</span><span>09 May</span><span>10 May</span><span>11 May</span><span>12 May</span><span>13 May</span></div>
+                </div>
+              </div>
+
+              <div class="img-panel-box">
+                <div class="img-panel-header">
+                  <h3>Recent Orders</h3>
+                  <a class="img-link-text" onclick="switchSellerSection('orders', null)">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="img-order-row">
+                  <div class="img-order-left"><div class="img-thumb"><i class="fas fa-clock"></i></div><div class="img-order-info"><strong>ORD-7832</strong><span>Smart Watch X1</span></div></div>
+                  <span class="img-price">₹2,499</span><span class="img-status-badge delivered">Delivered</span>
+                </div>
+                <div class="img-order-row">
+                  <div class="img-order-left"><div class="img-thumb"><i class="fas fa-headphones"></i></div><div class="img-order-info"><strong>ORD-7831</strong><span>Wireless Earbuds</span></div></div>
+                  <span class="img-price">₹1,299</span><span class="img-status-badge delivered">Delivered</span>
+                </div>
+                <div class="img-order-row">
+                  <div class="img-order-left"><div class="img-thumb"><i class="fas fa-bolt"></i></div><div class="img-order-info"><strong>ORD-7830</strong><span>USB-C Quick Cable</span></div></div>
+                  <span class="img-price">₹399</span><span class="img-status-badge shipped">Shipped</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Orders -->
+          <div id="section-orders" class="dashboard-section">
+            <div class="section-full-box">
+              <h3><i class="fas fa-shopping-cart" style="color:#6366f1;"></i> Orders Management — <span class="seller-user-name-display">Priya Sharma</span> Store</h3>
+              <div class="data-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Risk Score</th><th>Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="sellerOrdersTbody">
+                    <tr class="seller-order-row"><td>#ORD-7832</td><td class="cust-user-name-display">Priya Sharma</td><td>Smart Watch X1</td><td>₹2,499</td><td><span class="badge-status delivered">Low (12%)</span></td><td><span class="badge-status delivered">Delivered</span></td><td><button style="padding:0.3rem 0.6rem; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer;">Details</button></td></tr>
+                    <tr class="seller-order-row"><td>#ORD-7831</td><td>Rahul Verma</td><td>Wireless Earbuds Pro</td><td>₹1,299</td><td><span class="badge-status delivered">Low (18%)</span></td><td><span class="badge-status delivered">Delivered</span></td><td><button style="padding:0.3rem 0.6rem; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer;">Details</button></td></tr>
+                    <tr class="seller-order-row"><td>#ORD-7830</td><td>Amit Kumar</td><td>USB-C 100W Cable</td><td>₹399</td><td><span class="badge-status delivered">Low (8%)</span></td><td><span class="badge-status shipped">Shipped</span></td><td><button style="padding:0.3rem 0.6rem; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer;">Details</button></td></tr>
+                    <tr class="seller-order-row"><td>#ORD-7829</td><td>Sandeep Singh</td><td>Magnetic Phone Case</td><td>₹299</td><td><span class="badge-status cancelled">High (82%)</span></td><td><span class="badge-status processing">Flagged</span></td><td><button style="padding:0.3rem 0.6rem; border-radius:6px; border:none; background:#ef4444; color:#fff; cursor:pointer;">Verify ID</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Products -->
+          <div id="section-products" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-box" style="color:#10b981;"></i> Product Catalog Management — <span class="seller-user-name-display">Priya Sharma</span></h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Manage store inventory, prices, and stock availability with full edit access.</p>
+                </div>
+                <button onclick="openAddProductModal()" style="padding:0.6rem 1.2rem; border-radius:30px; border:none; background:#10b981; color:#fff; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px;"><i class="fas fa-plus"></i> Add New Product</button>
+              </div>
+
+              <!-- Product Floating Setup Box with Attributes -->
+              <div id="productInlineFloatingBox" class="inline-floating-card-box" style="display:none; background:linear-gradient(135deg, #ecfdf5, #f0fdf4); border:2px dashed #34d399; border-radius:24px; padding:1.8rem; margin-bottom:1.5rem; animation:modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1); box-shadow:0 12px 28px rgba(16,185,129,0.12);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                  <h4 id="productFloatingBoxTitle" style="font-size:1.1rem; color:#065f46; font-weight:800; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-box" style="color:#10b981;"></i> Product Attribute Setup — Add / Edit Store Item
+                  </h4>
+                  <button type="button" onclick="closeProductFloatingBox()" style="background:none; border:none; color:#047857; font-size:1.1rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+
+                <form id="productFloatingForm" onsubmit="submitSaveProductInline(event)">
+                  <input type="hidden" id="inlineEditIsUpdate" value="false" />
+                  <input type="hidden" id="inlineTargetRowId" value="" />
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1rem;">
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#064e3b;"><i class="fas fa-hashtag"></i> Product ID</label>
+                      <input type="text" id="inlineProdId" placeholder="e.g. PRD-105" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #a7f3d0; font-size:0.88rem; background:#fff;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#064e3b;"><i class="fas fa-tag"></i> Product Name</label>
+                      <input type="text" id="inlineProdName" placeholder="e.g. Noise-Cancelling Headphones" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #a7f3d0; font-size:0.88rem; background:#fff;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#064e3b;"><i class="fas fa-layer-group"></i> Category</label>
+                      <select id="inlineProdCat" style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #a7f3d0; font-size:0.88rem; background:#fff;">
+                        <option value="Electronics" selected>Electronics</option>
+                        <option value="Audio">Audio</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Wearables">Wearables</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.2rem;">
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#064e3b;"><i class="fas fa-indian-rupee-sign"></i> Price (₹)</label>
+                      <input type="number" id="inlineProdPrice" placeholder="e.g. 4999" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #a7f3d0; font-size:0.88rem; background:#fff;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#064e3b;"><i class="fas fa-boxes-stacked"></i> Stock Status (Units)</label>
+                      <input type="number" id="inlineProdStock" placeholder="e.g. 50" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #a7f3d0; font-size:0.88rem; background:#fff;" />
+                    </div>
+                  </div>
+
+                  <div style="display:flex; justify-content:flex-end; gap:0.8rem;">
+                    <button type="button" onclick="closeProductFloatingBox()" style="padding:0.5rem 1.2rem; border-radius:20px; border:1px solid #a7f3d0; background:#fff; cursor:pointer; font-size:0.85rem; font-weight:600; color:#065f46;">Cancel</button>
+                    <button type="submit" id="inlineProdSubmitBtn" style="padding:0.55rem 1.4rem; border-radius:20px; border:none; background:#10b981; color:#fff; cursor:pointer; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:6px;"><i class="fas fa-plus"></i> Save Product Attributes</button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Product Catalog Table -->
+              <div class="data-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Product ID</th><th>Product Name</th><th>Category</th><th>Price</th><th>Stock Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="productCatalogTbody">
+                    <tr id="prod-row-PRD-101" class="seller-prod-row"><td><strong>#PRD-101</strong></td><td class="prod-name-td">Smart Watch X1</td><td class="prod-cat-td">Electronics</td><td class="prod-price-td">₹2,499</td><td><span class="badge-status delivered prod-stock-td">45 in stock</span></td><td><button onclick="openEditProductModal('PRD-101', 'Smart Watch X1', 'Electronics', 2499, 45)" style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #6366f1; background:#ede9fe; color:#6366f1; font-weight:600; cursor:pointer;"><i class="fas fa-edit"></i> Edit Product</button></td></tr>
+                    <tr id="prod-row-PRD-102" class="seller-prod-row"><td><strong>#PRD-102</strong></td><td class="prod-name-td">Wireless Earbuds Pro</td><td class="prod-cat-td">Audio</td><td class="prod-price-td">₹1,299</td><td><span class="badge-status delivered prod-stock-td">120 in stock</span></td><td><button onclick="openEditProductModal('PRD-102', 'Wireless Earbuds Pro', 'Audio', 1299, 120)" style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #6366f1; background:#ede9fe; color:#6366f1; font-weight:600; cursor:pointer;"><i class="fas fa-edit"></i> Edit Product</button></td></tr>
+                    <tr id="prod-row-PRD-103" class="seller-prod-row"><td><strong>#PRD-103</strong></td><td class="prod-name-td">USB-C 100W Quick Cable</td><td class="prod-cat-td">Accessories</td><td class="prod-price-td">₹399</td><td><span class="badge-status delivered prod-stock-td">300 in stock</span></td><td><button onclick="openEditProductModal('PRD-103', 'USB-C 100W Quick Cable', 'Accessories', 399, 300)" style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #6366f1; background:#ede9fe; color:#6366f1; font-weight:600; cursor:pointer;"><i class="fas fa-edit"></i> Edit Product</button></td></tr>
+                    <tr id="prod-row-PRD-104" class="seller-prod-row"><td><strong>#PRD-104</strong></td><td class="prod-name-td">Magnetic Protective Case</td><td class="prod-cat-td">Accessories</td><td class="prod-price-td">₹299</td><td><span class="badge-status processing prod-stock-td">15 in stock</span></td><td><button onclick="openEditProductModal('PRD-104', 'Magnetic Protective Case', 'Accessories', 299, 15)" style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #6366f1; background:#ede9fe; color:#6366f1; font-weight:600; cursor:pointer;"><i class="fas fa-edit"></i> Edit Product</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Fraud Analytics (EDA CHARTS FROM USER SCREENSHOT) -->
+          <div id="section-analytics" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-chart-line" style="color:#6366f1;"></i> Exploratory Data Analysis &amp; Fraud Analytics</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Comprehensive distribution charts generated from transaction logs for <span class="seller-user-name-display">Priya Sharma</span>.</p>
+                </div>
+                <button onclick="initFraudAnalyticsCharts()" style="padding:0.5rem 1rem; border-radius:8px; border:1px solid #6366f1; background:#ede9fe; color:#6366f1; font-weight:600; cursor:pointer;"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+              </div>
+
+              <!-- 6 EDA Charts Grid -->
+              <div class="eda-charts-grid">
+                <!-- Chart 1: Region -->
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Fraud Rate by Region</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="chartRegion"></canvas></div>
+                </div>
+
+                <!-- Chart 2: Card Type -->
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Fraud Rate by Card Type</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="chartCardType"></canvas></div>
+                </div>
+
+                <!-- Chart 3: Age Group -->
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Fraud Rate by Age Group</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="chartAgeGroup"></canvas></div>
+                </div>
+
+                <!-- Chart 4: Amount Distribution -->
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Transaction Amount Distribution</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="chartAmountDist"></canvas></div>
+                </div>
+
+                <!-- Chart 5: Hour -->
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Fraud Count by Hour</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="chartHourCount"></canvas></div>
+                </div>
+
+                <!-- Chart 6: Fraud Types -->
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Top Fraud Types</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="chartFraudTypes"></canvas></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Risk Score Engine (TABULAR FORMAT) -->
+          <div id="section-risk-detector" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-microchip" style="color:#ef4444;"></i> Transaction Fraud Risk Scoring Matrix</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Tabular risk model evaluating transaction parameters against machine learning anomaly thresholds.</p>
+                </div>
+                <div style="font-size:0.8rem; background:#fee2e2; color:#dc2626; padding:0.4rem 1rem; border-radius:20px; font-weight:700;">
+                  Model Status: Active Threshold Check
+                </div>
+              </div>
+
+              <!-- Interactive Evaluator Inputs -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:1.2rem; margin-bottom:1.5rem;">
+                <h4 style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-bottom:0.8rem;"><i class="fas fa-sliders" style="color:#6366f1;"></i> Evaluate Custom Transaction Risk</h4>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem; align-items:end;">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size:0.8rem;">Amount (₹)</label>
+                    <input type="number" id="riskAmount" value="6000" style="padding:0.5rem 0.8rem; font-size:0.9rem;" />
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size:0.8rem;">Card Type</label>
+                    <select id="riskCardType" style="padding:0.5rem 0.8rem; font-size:0.9rem;">
+                      <option value="RuPay" selected>RuPay</option>
+                      <option value="MasterCard">MasterCard</option>
+                      <option value="Visa">Visa</option>
+                      <option value="Unknown">Unknown</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size:0.8rem;">Hour (0-23)</label>
+                    <input type="number" id="riskHour" min="0" max="23" value="5" style="padding:0.5rem 0.8rem; font-size:0.9rem;" />
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size:0.8rem;">Region</label>
+                    <select id="riskRegion" style="padding:0.5rem 0.8rem; font-size:0.9rem;">
+                      <option value="North" selected>North</option>
+                      <option value="East">East</option>
+                      <option value="West">West</option>
+                      <option value="South">South</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size:0.8rem;">Age Group</label>
+                    <select id="riskAge" style="padding:0.5rem 0.8rem; font-size:0.9rem;">
+                      <option value="Elderly" selected>Elderly (60+)</option>
+                      <option value="Senior">Senior (45-60)</option>
+                      <option value="Adult">Adult (25-45)</option>
+                      <option value="Young">Young (18-25)</option>
+                    </select>
+                  </div>
+                  <button onclick="evaluateAndAddRiskRow()" style="padding:0.6rem 1rem; border-radius:30px; border:none; background:#6366f1; color:#fff; font-weight:700; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; height:40px;"><i class="fas fa-calculator"></i> Evaluate &amp; Log</button>
+                </div>
+              </div>
+
+              <!-- Risk Score Tabular Matrix -->
+              <div class="data-table-wrapper">
+                <table class="data-table" id="riskScoreMatrixTable">
+                  <thead>
+                    <tr>
+                      <th>Txn ID</th>
+                      <th>Amount (₹)</th>
+                      <th>Card Type</th>
+                      <th>Hour</th>
+                      <th>Region</th>
+                      <th>Age Group</th>
+                      <th>Risk Score</th>
+                      <th>Risk Level</th>
+                      <th>Security Action / Recommendation</th>
+                    </tr>
+                  </thead>
+                  <tbody id="riskMatrixTbody">
+                    <tr class="seller-risk-row">
+                      <td>#TXN-9842</td>
+                      <td>₹6,000</td>
+                      <td>RuPay</td>
+                      <td>05:00 AM</td>
+                      <td>North</td>
+                      <td>Elderly (60+)</td>
+                      <td><strong>82%</strong></td>
+                      <td><span class="risk-badge high">HIGH RISK</span></td>
+                      <td><span style="color:#dc2626; font-weight:600;"><i class="fas fa-shield-exclamation"></i> Step-up Biometrics Required</span></td>
+                    </tr>
+                    <tr class="seller-risk-row">
+                      <td>#TXN-9841</td>
+                      <td>₹18,500</td>
+                      <td>MasterCard</td>
+                      <td>02:00 PM</td>
+                      <td>East</td>
+                      <td>Senior (45-60)</td>
+                      <td><strong>74%</strong></td>
+                      <td><span class="risk-badge high">HIGH RISK</span></td>
+                      <td><span style="color:#dc2626; font-weight:600;"><i class="fas fa-user-xmark"></i> Flagged for Manual Review</span></td>
+                    </tr>
+                    <tr class="seller-risk-row">
+                      <td>#TXN-9840</td>
+                      <td>₹2,499</td>
+                      <td>Visa</td>
+                      <td>11:00 AM</td>
+                      <td>West</td>
+                      <td>Adult (25-45)</td>
+                      <td><strong>45%</strong></td>
+                      <td><span class="risk-badge medium">MEDIUM RISK</span></td>
+                      <td><span style="color:#b45309; font-weight:600;"><i class="fas fa-lock"></i> Standard OTP Verification</span></td>
+                    </tr>
+                    <tr class="seller-risk-row">
+                      <td>#TXN-9839</td>
+                      <td>₹1,299</td>
+                      <td>Visa</td>
+                      <td>06:00 PM</td>
+                      <td>South</td>
+                      <td>Young (18-25)</td>
+                      <td><strong>18%</strong></td>
+                      <td><span class="risk-badge low">LOW RISK</span></td>
+                      <td><span style="color:#15803d; font-weight:600;"><i class="fas fa-circle-check"></i> Auto-Approved</span></td>
+                    </tr>
+                    <tr class="seller-risk-row">
+                      <td>#TXN-9838</td>
+                      <td>₹399</td>
+                      <td>RuPay</td>
+                      <td>08:00 PM</td>
+                      <td>West</td>
+                      <td>Adult (25-45)</td>
+                      <td><strong>15%</strong></td>
+                      <td><span class="risk-badge low">LOW RISK</span></td>
+                      <td><span style="color:#15803d; font-weight:600;"><i class="fas fa-circle-check"></i> Auto-Approved</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 6: Payouts -->
+          <div id="section-payouts" class="dashboard-section">
+            <div class="section-full-box">
+              <h3><i class="fas fa-wallet" style="color:#d97706;"></i> Payouts &amp; Settlements — <span class="seller-user-name-display">Priya Sharma</span> Store</h3>
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:1rem;">Available Balance: <strong>₹24,560</strong> (Protected by FraudShield Guarantee)</p>
+              <button style="padding:0.7rem 1.5rem; background:#10b981; color:#fff; border:none; border-radius:30px; font-weight:600; cursor:pointer;"><i class="fas fa-university"></i> Withdraw to Bank</button>
+            </div>
+          </div>
+
+          <!-- Section 7: Returns (EVALUATED BY RISK ANALYSIS ENGINE) -->
+          <div id="section-returns" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-undo" style="color:#ef4444;"></i> Returns &amp; Dispute Protection — <span class="seller-user-name-display">Priya Sharma</span> Store</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Return claims evaluated automatically by the FraudShield Risk Analysis Engine.</p>
+                </div>
+                <div style="background:#dcfce7; color:#15803d; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700;">
+                  Return Risk Guard: Active
+                </div>
+              </div>
+
+              <!-- Risk Policy Banner for Returns -->
+              <div class="risk-policy-banner">
+                <i class="fas fa-scale-balanced"></i>
+                <div>
+                  <strong>Risk Engine Return Policy:</strong>
+                  Return requests from <strong>Low Risk (0-40%)</strong> and <strong>Medium Risk (41-70%)</strong> customers are approved for instant refund/pickup. Requests flagged as <strong>High Risk (71-100%)</strong> are held for serial swap fraud &amp; return abuse anomaly verification.
+                </div>
+              </div>
+
+              <div class="data-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Return ID</th>
+                      <th>Customer Name</th>
+                      <th>Product</th>
+                      <th>Claim Reason</th>
+                      <th>Risk Score</th>
+                      <th>Engine Decision</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sellerReturnsTbody">
+                    <tr class="seller-return-row">
+                      <td><strong>#RET-401</strong></td>
+                      <td class="cust-user-name-display">Priya Sharma</td>
+                      <td>Smart Watch X1 (₹2,499)</td>
+                      <td>Defective Display</td>
+                      <td><span class="risk-badge low">12% (LOW RISK)</span></td>
+                      <td><span class="badge-status delivered">Approved for Refund</span></td>
+                      <td>
+                        <div style="display:flex; gap:6px;">
+                          <button onclick="openReplyModal('Priya Sharma', '#RET-401 (Smart Watch X1)', '12', 'low')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#6366f1; color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;"><i class="fas fa-reply"></i> Reply to Buyer</button>
+                          <button style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#10b981; color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;"><i class="fas fa-check"></i> Process Refund</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="seller-return-row">
+                      <td><strong>#RET-402</strong></td>
+                      <td>Amit Kumar</td>
+                      <td>USB-C Cable (₹399)</td>
+                      <td>Wrong Item Sent</td>
+                      <td><span class="risk-badge medium">45% (MEDIUM RISK)</span></td>
+                      <td><span class="badge-status processing">Under Verification</span></td>
+                      <td>
+                        <div style="display:flex; gap:6px;">
+                          <button onclick="openReplyModal('Amit Kumar', '#RET-402 (USB-C Cable)', '45', 'medium')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#6366f1; color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;"><i class="fas fa-reply"></i> Reply to Buyer</button>
+                          <button style="padding:0.35rem 0.8rem; border-radius:20px; border:1px solid #f59e0b; background:#fffbe8; color:#b45309; font-size:0.78rem; font-weight:600; cursor:pointer;">Request Invoice</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="seller-return-row">
+                      <td><strong>#RET-403</strong></td>
+                      <td>Sandeep Singh</td>
+                      <td>Phone Case (₹299)</td>
+                      <td>Empty Box Claim</td>
+                      <td><span class="risk-badge high">82% (HIGH RISK)</span></td>
+                      <td><span class="badge-status cancelled">Flagged Return Fraud</span></td>
+                      <td>
+                        <div style="display:flex; gap:6px;">
+                          <button onclick="openReplyModal('Sandeep Singh', '#RET-403 (Flagged Claim)', '82', 'high')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#6366f1; color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;"><i class="fas fa-reply"></i> Reply to Buyer</button>
+                          <button style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#ef4444; color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;">Reject Claim</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 8: Reviews -->
+          <div id="section-reviews" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-star" style="color:#f59e0b;"></i> Verified Store Reviews &amp; Ratings — <span class="seller-user-name-display">Priya Sharma</span> Store</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Reviews are published ONLY from Low Risk (0-40%) and Medium Risk (41-70%) verified buyers.</p>
+                </div>
+                <div style="background:#fef3c7; color:#b45309; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700;">
+                  Store Rating: ★ 4.8 / 5.0
+                </div>
+              </div>
+
+              <!-- Risk Policy Banner -->
+              <div class="risk-policy-banner">
+                <i class="fas fa-shield-halved"></i>
+                <div>
+                  <strong>FraudShield Review Verification Guarantee:</strong>
+                  Only reviews from Low Risk and Medium Risk verified customers are accepted onto your store listing. High Risk (71-100%) fake review attacks or phishing attempts are automatically rejected and quarantined.
+                </div>
+              </div>
+
+              <!-- Filter Tabs -->
+              <div class="risk-filter-tabs">
+                <button class="filter-tab-pill active" onclick="filterSellerReviews('all', this)"><i class="fas fa-list-check"></i> All Verified Reviews</button>
+                <button class="filter-tab-pill" onclick="filterSellerReviews('low', this)"><i class="fas fa-circle-check" style="color:#10b981;"></i> Low Risk Buyers (3)</button>
+                <button class="filter-tab-pill" onclick="filterSellerReviews('medium', this)"><i class="fas fa-shield" style="color:#f59e0b;"></i> Medium Risk Buyers (1)</button>
+                <button class="filter-tab-pill" onclick="filterSellerReviews('high', this)"><i class="fas fa-ban" style="color:#ef4444;"></i> Blocked High Risk Attempts (1)</button>
+              </div>
+
+              <!-- Review Items List -->
+              <div id="sellerReviewsContainer">
+                <!-- Review 1: Low Risk -->
+                <div class="review-item-card" data-risk="low">
+                  <div class="review-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <strong style="color:#0f172a;" class="cust-user-name-display">Priya Sharma</strong>
+                      <span class="risk-badge low"><i class="fas fa-circle-check"></i> Low Risk Verified Buyer (12%)</span>
+                    </div>
+                    <span style="font-size:0.78rem; color:#64748b;">12 May 2025</span>
+                  </div>
+                  <div class="review-stars">★★★★★ <span style="color:#0f172a; font-weight:600; font-size:0.85rem; margin-left:6px;">5.0 — Excellent Smart Watch!</span></div>
+                  <p style="font-size:0.88rem; color:#334155; margin-top:0.4rem; line-height:1.4;">"Exceptional build quality on the Smart Watch X1! Super fast delivery, great packaging, and seamless biometric checkout."</p>
+                </div>
+
+                <!-- Review 2: Low Risk -->
+                <div class="review-item-card" data-risk="low">
+                  <div class="review-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <strong style="color:#0f172a;">Rahul Verma</strong>
+                      <span class="risk-badge low"><i class="fas fa-circle-check"></i> Low Risk Verified Buyer (18%)</span>
+                    </div>
+                    <span style="font-size:0.78rem; color:#64748b;">11 May 2025</span>
+                  </div>
+                  <div class="review-stars">★★★★☆ <span style="color:#0f172a; font-weight:600; font-size:0.85rem; margin-left:6px;">4.0 — High Quality Earbuds</span></div>
+                  <p style="font-size:0.88rem; color:#334155; margin-top:0.4rem; line-height:1.4;">"Wireless Earbuds Pro sound amazing for the price. Clear audio and fast pairing."</p>
+                </div>
+
+                <!-- Review 3: Medium Risk -->
+                <div class="review-item-card" data-risk="medium">
+                  <div class="review-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <strong style="color:#0f172a;">Amit Kumar</strong>
+                      <span class="risk-badge medium"><i class="fas fa-shield"></i> Medium Risk Verified Buyer (45%)</span>
+                    </div>
+                    <span style="font-size:0.78rem; color:#64748b;">09 May 2025</span>
+                  </div>
+                  <div class="review-stars">★★★★★ <span style="color:#0f172a; font-weight:600; font-size:0.85rem; margin-left:6px;">5.0 — Solid Fast Charging Cable</span></div>
+                  <p style="font-size:0.88rem; color:#334155; margin-top:0.4rem; line-height:1.4;">"Cable feels durable and handles 100W quick charge without heating."</p>
+                </div>
+
+                <!-- Review 4: High Risk (REJECTED) -->
+                <div class="review-item-card rejected" data-risk="high">
+                  <div class="review-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <strong style="color:#991b1b;">Flagged User #9082</strong>
+                      <span class="risk-badge high"><i class="fas fa-ban"></i> REJECTED — High Risk (85%)</span>
+                    </div>
+                    <span style="font-size:0.78rem; color:#991b1b; font-weight:600;">Blocked Attempt</span>
+                  </div>
+                  <div class="msg-quarantined-notice">
+                    <i class="fas fa-circle-xmark"></i> Review submission rejected by FraudShield Anomaly Engine. Multiple spam attempts &amp; suspicious IP network detected.
+                  </div>
+                  <p style="font-size:0.85rem; color:#991b1b; opacity:0.8; font-style:italic;">[Content suppressed: Malicious external link / fake rating attack attempt]</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 9: Messages -->
+          <div id="section-messages" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-comment-dots" style="color:#6366f1;"></i> Customer Messages &amp; Inquiry Safeguard</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Buyer communication is permitted ONLY for Low Risk and Medium Risk verified customers.</p>
+                </div>
+                <div style="background:#e0f2fe; color:#0369a1; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700;">
+                  Protection: Active Phishing Filter
+                </div>
+              </div>
+
+              <!-- Risk Policy Banner -->
+              <div class="risk-policy-banner">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                  <strong>FraudShield Messaging Policy:</strong>
+                  Messaging privileges are enabled exclusively for <strong>Low Risk (0-40%)</strong> and <strong>Medium Risk (41-70%)</strong> customers. High Risk (71-100%) accounts are automatically quarantined to protect sellers against phishing links, off-platform payment scams, and fake return claims.
+                </div>
+              </div>
+
+              <!-- Filter Tabs -->
+              <div class="risk-filter-tabs">
+                <button class="filter-tab-pill active" onclick="filterSellerMessages('all', this)"><i class="fas fa-inbox"></i> All Allowed Messages (Low &amp; Medium Risk)</button>
+                <button class="filter-tab-pill" onclick="filterSellerMessages('low', this)"><i class="fas fa-circle-check" style="color:#10b981;"></i> Low Risk Messages</button>
+                <button class="filter-tab-pill" onclick="filterSellerMessages('medium', this)"><i class="fas fa-shield" style="color:#f59e0b;"></i> Medium Risk Messages</button>
+                <button class="filter-tab-pill" onclick="filterSellerMessages('high', this)"><i class="fas fa-box-archive" style="color:#ef4444;"></i> Quarantined High Risk (1)</button>
+              </div>
+
+              <!-- Messages List -->
+              <div id="sellerMessagesContainer">
+                <!-- Message 1: Low Risk -->
+                <div class="msg-list-card" data-risk="low">
+                  <div class="msg-card-top">
+                    <div class="msg-user-info">
+                      <div class="msg-avatar msg-avatar-user">PS</div>
+                      <div>
+                        <strong style="color:#0f172a; font-size:0.95rem;" class="cust-user-name-display">Priya Sharma</strong>
+                        <small style="color:#64748b; display:block;">Order: #ORD-7832 (Smart Watch X1)</small>
+                      </div>
+                    </div>
+                    <span class="risk-badge low"><i class="fas fa-circle-check"></i> LOW RISK (12%) — Allowed</span>
+                  </div>
+                  <div class="msg-body-text">
+                    "Hi TechStore! Could you please confirm if the Smart Watch X1 comes with an additional silicon replacement strap in the box?"
+                  </div>
+                  <div style="display:flex; gap:0.6rem; align-items:center;">
+                    <button onclick="openReplyModal('Priya Sharma', '#ORD-7832 (Smart Watch X1)', '12', 'low')" style="padding:0.4rem 1rem; border-radius:20px; border:none; background:#6366f1; color:#fff; font-weight:600; font-size:0.8rem; cursor:pointer;"><i class="fas fa-reply"></i> Reply to Buyer</button>
+                    <button style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #ccc; background:#fff; font-size:0.8rem; cursor:pointer;">Mark Resolved</button>
+                  </div>
+                </div>
+
+                <!-- Message 2: Medium Risk -->
+                <div class="msg-list-card" data-risk="medium">
+                  <div class="msg-card-top">
+                    <div class="msg-user-info">
+                      <div class="msg-avatar" style="background:#fef3c7; color:#b45309;">AK</div>
+                      <div>
+                        <strong style="color:#0f172a; font-size:0.95rem;">Amit Kumar</strong>
+                        <small style="color:#64748b; display:block;">Order: #ORD-7830 (USB-C Cable)</small>
+                      </div>
+                    </div>
+                    <span class="risk-badge medium"><i class="fas fa-shield"></i> MEDIUM RISK (45%) — Allowed</span>
+                  </div>
+                  <div class="msg-body-text">
+                    "Hello, I requested an address correction earlier today. Can you check if the updated shipping address is reflected on the courier manifest?"
+                  </div>
+                  <div style="display:flex; gap:0.6rem; align-items:center;">
+                    <button onclick="openReplyModal('Amit Kumar', '#ORD-7830 (USB-C Cable)', '45', 'medium')" style="padding:0.4rem 1rem; border-radius:20px; border:none; background:#6366f1; color:#fff; font-weight:600; font-size:0.8rem; cursor:pointer;"><i class="fas fa-reply"></i> Reply to Buyer</button>
+                    <button style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #f59e0b; background:#fffbe8; color:#b45309; font-weight:600; font-size:0.8rem; cursor:pointer;"><i class="fas fa-key"></i> Request OTP Check</button>
+                  </div>
+                </div>
+
+                <!-- Message 3: High Risk (QUARANTINED) -->
+                <div class="msg-list-card quarantined" data-risk="high">
+                  <div class="msg-card-top">
+                    <div class="msg-user-info">
+                      <div class="msg-avatar" style="background:#fee2e2; color:#dc2626;">SS</div>
+                      <div>
+                        <strong style="color:#991b1b; font-size:0.95rem;">Sandeep Singh (Quarantined)</strong>
+                        <small style="color:#991b1b; display:block;">Order: #ORD-7829 (Flagged Order)</small>
+                      </div>
+                    </div>
+                    <span class="risk-badge high"><i class="fas fa-ban"></i> HIGH RISK (82%) — QUARANTINED</span>
+                  </div>
+                  <div class="msg-quarantined-notice">
+                    <i class="fas fa-shield-exclamation"></i> Message delivery blocked. High Risk score anomaly detected. Buyer communication suspended.
+                  </div>
+                  <div class="msg-body-text" style="color:#991b1b; font-style:italic;">
+                    [BLOCKED BY FRAUDSHIELD: Message contained suspicious external URL and payment redirect request.]
+                  </div>
+                  <div style="display:flex; gap:0.6rem; align-items:center;">
+                    <button onclick="openReplyModal('Sandeep Singh', '#ORD-7829 (Flagged Order)', '82', 'high')" style="padding:0.4rem 1rem; border-radius:20px; border:none; background:#ef4444; color:#fff; font-weight:600; font-size:0.8rem; cursor:pointer;"><i class="fas fa-reply"></i> Reply to Buyer</button>
+                    <button style="padding:0.4rem 0.8rem; border-radius:20px; border:1px solid #ef4444; background:#fee2e2; color:#dc2626; font-size:0.8rem; cursor:pointer;"><i class="fas fa-flag"></i> Report Security Incident</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 10: Store Settings -->
+          <div id="section-store-settings" class="dashboard-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-cog" style="color:#475569;"></i> Security &amp; Store Settings</h3>
+                  <p style="font-size:0.9rem; color:#64748b;">Manage your seller profile, Gmail name credentials, and security preferences.</p>
+                </div>
+                <div style="background:#ecfdf5; color:#047857; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700;">
+                  <i class="fas fa-check-circle"></i> Verified Seller Profile
+                </div>
+              </div>
+
+              <!-- Seller Profile Card -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.5rem; margin-bottom:1.5rem;">
+                <h4 style="font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:1rem; display:flex; align-items:center; gap:8px;">
+                  <i class="fas fa-user-gear" style="color:#6366f1;"></i> Seller Store Profile Details
+                </h4>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.2rem;">
+                  <div class="form-group" style="margin:0;">
+                    <label style="font-size:0.8rem; font-weight:700; color:#475569;"><i class="fas fa-user"></i> Seller Owner / Gmail Name</label>
+                    <input type="text" id="sellerProfileNameInput" value="Priya Sharma" oninput="updateSellerNameFromInput(this.value)" placeholder="Enter seller / Gmail name" required style="width:100%; padding:0.65rem 0.9rem; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; background:#fff;" />
+                  </div>
+
+                  <div class="form-group" style="margin:0;">
+                    <label style="font-size:0.8rem; font-weight:700; color:#475569;"><i class="fas fa-envelope"></i> Seller Gmail Address</label>
+                    <input type="email" id="sellerProfileEmailInput" value="seller@gmail.com" placeholder="seller@gmail.com" style="width:100%; padding:0.65rem 0.9rem; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; background:#fff;" />
+                  </div>
+
+                  <div class="form-group" style="margin:0;">
+                    <label style="font-size:0.8rem; font-weight:700; color:#475569;"><i class="fas fa-store"></i> Store Display Name</label>
+                    <div style="padding:0.65rem 0.9rem; border-radius:10px; border:1px solid #e2e8f0; background:#f1f5f9; font-size:0.9rem; font-weight:600; color:#1e293b;">
+                      <span class="seller-user-name-display">Priya Sharma</span> Store
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin-top:1.2rem; display:flex; justify-content:flex-end;">
+                  <button type="button" onclick="showToastNotification('✓ Seller Store Profile updated successfully!')" style="padding:0.6rem 1.4rem; border-radius:30px; border:none; background:#6366f1; color:#fff; font-size:0.85rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                    <i class="fas fa-save"></i> Save Profile Settings
+                  </button>
+                </div>
+              </div>
+
+              <!-- Security Card -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:18px; padding:1.5rem;">
+                <h4 style="font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:0.6rem; display:flex; align-items:center; gap:8px;">
+                  <i class="fas fa-shield-halved" style="color:#10b981;"></i> Biometric &amp; Refund Safeguards
+                </h4>
+                <p style="font-size:0.88rem; color:#64748b; margin-bottom:1rem;">Biometric step-up authentication is active for all order refund authorisations and payouts.</p>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                  <span style="font-size:0.8rem; background:#dcfce7; color:#166534; padding:0.4rem 0.8rem; border-radius:20px; font-weight:600;"><i class="fas fa-check"></i> Biometric Step-Up Active</span>
+                  <span style="font-size:0.8rem; background:#e0f2fe; color:#075985; padding:0.4rem 0.8rem; border-radius:20px; font-weight:600;"><i class="fas fa-lock"></i> TLS 1.3 Encryption Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── CUSTOMER DASHBOARD ─── -->
+  <div class="dashboard-customer" id="dashboardCustomer">
+    <div class="dashboard-card-cust">
+      
+      <!-- Customer Sidebar -->
+      <div class="cust-sidebar">
+        <div class="cust-brand-header">
+          <div class="shop-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <h1>ShopEase</h1>
+            <span>Safe Shopper Portal</span>
+          </div>
+        </div>
+        <ul class="cust-nav-list" id="custNavList">
+          <li class="cust-nav-item active" data-section="overview" onclick="switchCustomerSection('overview', this)"><i class="fas fa-home"></i> Shopping Home</li>
+          <li class="cust-nav-item" data-section="orders" onclick="switchCustomerSection('orders', this)"><i class="fas fa-box-open"></i> My Orders</li>
+          <li class="cust-nav-item" data-section="tracking" onclick="switchCustomerSection('tracking', this)"><i class="fas fa-truck-fast"></i> Order Tracking</li>
+          <li class="cust-nav-item" data-section="wishlist" onclick="switchCustomerSection('wishlist', this)"><i class="fas fa-heart"></i> My Wishlist</li>
+          <li class="cust-nav-item" data-section="write-review" onclick="switchCustomerSection('write-review', this)"><i class="fas fa-star"></i> Write Product Review</li>
+          <li class="cust-nav-item" data-section="contact-seller" onclick="switchCustomerSection('contact-seller', this)"><i class="fas fa-comment-dots"></i> Message Seller</li>
+          <li class="cust-nav-item" data-section="analytics" onclick="switchCustomerSection('analytics', this)"><i class="fas fa-chart-bar"></i> Fraud Awareness EDA</li>
+          <li class="cust-nav-item" data-section="wallet" onclick="switchCustomerSection('wallet', this)"><i class="fas fa-credit-card"></i> Saved Cards</li>
+        </ul>
+        <div class="cust-sidebar-promo">
+          <h4>Live Order Tracking</h4>
+          <p>Track your shipment location and delivery dates in real time.</p>
+          <button class="cust-promo-btn" onclick="switchCustomerSection('tracking', document.querySelector('#custNavList li[data-section=\'tracking\']'))"><i class="fas fa-location-dot"></i> Track Package</button>
+        </div>
+        <div style="padding: 1rem 1.2rem; border-top: 1px solid #f1f5f9;">
+          <button onclick="openLogoutFloat()" style="width:100%; padding:0.6rem; background:#fee2e2; border:none; color:#dc2626; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.85rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      </div>
+
+      <!-- Customer Main Pane -->
+      <div class="cust-main-pane">
+        <div class="cust-topbar">
+          <div class="cust-topbar-left" style="display:flex; align-items:center; gap:1rem; flex:1;">
+            <i class="fas fa-bars"></i>
+            <span style="font-weight:700; font-size:1rem; color:#0f172a; white-space:nowrap;">Customer Dashboard</span>
+            
+            <!-- Single Universal Topbar Search Bar -->
+            <div class="section-search-box" style="margin:0 0 0 1rem; width:100%; max-width:480px; border-color:#cbd5e1; background:#ffffff; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+              <i class="fas fa-search" style="color:#059669;"></i>
+              <input type="text" id="custGlobalSearchInput" onkeyup="filterCustomerGlobalSearch(this.value)" placeholder="🔍 Search orders, tracking, wishlist items, saved cards..." />
+            </div>
+          </div>
+          <div class="cust-topbar-right">
+            <div class="cust-user-profile" onclick="switchCustomerSection('orders', null)">
+              <div class="cust-user-avatar"><i class="fas fa-user"></i></div>
+              <div class="cust-user-info"><span id="custName">Priya Sharma</span><small>Verified Shopper</small></div>
+              <i class="fas fa-chevron-down" style="font-size: 0.65rem; color: #64748b;"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="cust-content-body">
+          <!-- Section 1: Overview -->
+          <div id="cust-section-overview" class="cust-section active">
+            <!-- Welcome Banner with Verified Customer Name -->
+            <div class="cust-welcome-banner">
+              <div>
+                <h2>Hello, <span class="cust-user-name-display">Priya Sharma</span>! 👋</h2>
+                <p>Welcome to your safe shopper portal. Verified Account: <strong><span class="cust-user-name-display">Priya Sharma</span></strong> (ShopEase ID: #CUST-9842)</p>
+              </div>
+            </div>
+
+            <div class="cust-metrics-grid">
+              <div class="cust-metric-card">
+                <div class="cust-metric-top"><div class="cust-metric-icon green"><i class="fas fa-truck"></i></div></div>
+                <div class="cust-metric-title">Active Shipment</div>
+                <div class="cust-metric-value">Out for Delivery</div>
+                <div class="cust-metric-trend" onclick="switchCustomerSection('tracking', null)">View Delivery Timeline <i class="fas fa-arrow-right"></i></div>
+              </div>
+              <div class="cust-metric-card">
+                <div class="cust-metric-top"><div class="cust-metric-icon blue"><i class="fas fa-shopping-bag"></i></div></div>
+                <div class="cust-metric-title">Recent Orders</div>
+                <div class="cust-metric-value">3 Orders</div>
+                <div class="cust-metric-trend" onclick="switchCustomerSection('orders', null)">View History <i class="fas fa-arrow-right"></i></div>
+              </div>
+              <div class="cust-metric-card">
+                <div class="cust-metric-top"><div class="cust-metric-icon red"><i class="fas fa-heart"></i></div></div>
+                <div class="cust-metric-title">Saved Items</div>
+                <div class="cust-metric-value">4 Items</div>
+                <div class="cust-metric-trend" onclick="switchCustomerSection('wishlist', null)">View Wishlist <i class="fas fa-arrow-right"></i></div>
+              </div>
+            </div>
+
+            <div class="section-full-box">
+              <h3><i class="fas fa-box-check" style="color:#059669;"></i> Active Delivery Summary — <span class="cust-user-name-display">Priya Sharma</span></h3>
+              <p style="font-size:0.9rem; color:#64748b;">Your package <strong>#ORD-7832 (Smart Watch X1)</strong> is currently out for delivery by <strong>Express Logistics</strong> to <strong><span class="cust-user-name-display">Priya Sharma</span></strong>. Expected arrival by <strong>5:00 PM today</strong>.</p>
+            </div>
+          </div>
+
+          <!-- Section 2: Orders -->
+          <div id="cust-section-orders" class="cust-section">
+            <!-- Section Title -->
+            <div class="section-full-box">
+              <div style="margin-bottom:1rem;">
+                <h3 style="margin-bottom:2px;"><i class="fas fa-box" style="color:#059669;"></i> My Purchase Orders — Verified Customer: <span class="cust-user-name-display">Priya Sharma</span></h3>
+                <p style="font-size:0.85rem; color:#64748b;">All purchase orders linked to <span class="cust-user-name-display">Priya Sharma</span>'s verified account.</p>
+              </div>
+
+              <div class="data-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Order ID</th><th>Product</th><th>Price</th><th>Order Date</th><th>Status</th><th>Track &amp; Contact</th></tr>
+                  </thead>
+                  <tbody id="custOrdersTbody">
+                    <tr class="cust-order-row"><td><strong>#ORD-7832</strong></td><td class="order-prod-td">Smart Watch X1</td><td>₹2,499</td><td>May 10, 2025</td><td><span class="badge-status shipped">Out for Delivery</span></td><td><div style="display:flex; gap:6px;"><button onclick="switchCustomerSection('tracking', null)" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#059669; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-location-arrow"></i> Track</button><button onclick="openWriteReviewForProduct('Smart Watch X1')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#f59e0b; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-star"></i> Review</button><button onclick="openMessageSellerForOrder('#ORD-7832 (Smart Watch X1)')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#6366f1; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-comment-dots"></i> Message</button></div></td></tr>
+                    <tr class="cust-order-row"><td><strong>#ORD-7831</strong></td><td class="order-prod-td">Wireless Earbuds Pro</td><td>₹1,299</td><td>May 02, 2025</td><td><span class="badge-status delivered">Delivered</span></td><td><div style="display:flex; gap:6px;"><button onclick="switchCustomerSection('tracking', null)" style="padding:0.35rem 0.8rem; border-radius:20px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.75rem;">History</button><button onclick="openWriteReviewForProduct('Wireless Earbuds Pro')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#f59e0b; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-star"></i> Review</button><button onclick="openMessageSellerForOrder('#ORD-7831 (Wireless Earbuds Pro)')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#6366f1; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-comment-dots"></i> Message</button></div></td></tr>
+                    <tr class="cust-order-row"><td><strong>#ORD-7830</strong></td><td class="order-prod-td">USB-C 100W Quick Cable</td><td>₹399</td><td>Apr 28, 2025</td><td><span class="badge-status delivered">Delivered</span></td><td><div style="display:flex; gap:6px;"><button onclick="switchCustomerSection('tracking', null)" style="padding:0.35rem 0.8rem; border-radius:20px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.75rem;">History</button><button onclick="openWriteReviewForProduct('USB-C 100W Quick Cable')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#f59e0b; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-star"></i> Review</button><button onclick="openMessageSellerForOrder('#ORD-7830 (USB-C Cable)')" style="padding:0.35rem 0.8rem; border-radius:20px; border:none; background:#6366f1; color:#fff; cursor:pointer; font-size:0.75rem; font-weight:600;"><i class="fas fa-comment-dots"></i> Message</button></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Order Tracking (WITH DATES & AREAS) -->
+          <div id="cust-section-tracking" class="cust-section">
+            <!-- Section Content -->
+            <div class="section-full-box">
+              <div style="margin-bottom:1.5rem;">
+                <h3 style="margin-bottom:2px;"><i class="fas fa-truck-fast" style="color:#059669;"></i> Live Package Order Tracking — <span class="cust-user-name-display">Priya Sharma</span></h3>
+                <p style="font-size:0.85rem; color:#64748b;">Real-time timeline tracking with dates, facility checkpoints, and destination areas for <span class="cust-user-name-display">Priya Sharma</span>.</p>
+              </div>
+
+              <!-- Tracking Header Box -->
+              <div class="tracking-header-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                  <div>
+                    <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:#34d399; font-weight:700;">Live Status: Out for Delivery 🚚</div>
+                    <h2 style="font-size:1.4rem; font-weight:800; margin-top:2px;">Smart Watch X1 (Black Edition)</h2>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.1); padding:0.4rem 1rem; border-radius:30px; border:1px solid rgba(255,255,255,0.2); font-size:0.85rem; font-weight:600;">
+                    Courier: Express Logistics (AWB: 9812401)
+                  </div>
+                </div>
+
+                <div class="tracking-meta-grid">
+                  <div class="tracking-meta-item"><small>Tracking ID</small><strong>TRK-90421-IN</strong></div>
+                  <div class="tracking-meta-item"><small>Recipient</small><strong><span class="cust-user-name-display">Priya Sharma</span></strong></div>
+                  <div class="tracking-meta-item"><small>Estimated Delivery</small><strong>Today, 13 May (5:00 PM)</strong></div>
+                  <div class="tracking-meta-item"><small>Current Location</small><strong>Connaught Place, Delhi</strong></div>
+                </div>
+              </div>
+
+              <!-- Tracking Stepper Timeline -->
+              <div class="tracking-timeline" id="custTrackingTimelineContainer">
+                <!-- Step 1 -->
+                <div class="timeline-step completed">
+                  <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                  <div class="timeline-content">
+                    <div class="timeline-content-top">
+                      <span class="timeline-title">Order Placed &amp; Confirmed</span>
+                      <span class="timeline-date">10 May 2025, 09:30 AM</span>
+                    </div>
+                    <div class="timeline-area"><i class="fas fa-location-dot"></i> Area: Electronic City Hub, Bangalore, Karnataka</div>
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="timeline-step completed">
+                  <div class="timeline-icon"><i class="fas fa-box-open"></i></div>
+                  <div class="timeline-content">
+                    <div class="timeline-content-top">
+                      <span class="timeline-title">Package Processed &amp; Quality Checked</span>
+                      <span class="timeline-date">11 May 2025, 02:15 PM</span>
+                    </div>
+                    <div class="timeline-area"><i class="fas fa-location-dot"></i> Area: Fulfillment Warehouse, Whitefield, Bangalore, KA</div>
+                  </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="timeline-step completed">
+                  <div class="timeline-icon"><i class="fas fa-plane-departure"></i></div>
+                  <div class="timeline-content">
+                    <div class="timeline-content-top">
+                      <span class="timeline-title">Dispatched &amp; In Transit</span>
+                      <span class="timeline-date">12 May 2025, 08:45 AM</span>
+                    </div>
+                    <div class="timeline-area"><i class="fas fa-location-dot"></i> Area: Central Logistics Sort Center, Mumbai, Maharashtra</div>
+                  </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="timeline-step active">
+                  <div class="timeline-icon"><i class="fas fa-truck-ramp-box"></i></div>
+                  <div class="timeline-content">
+                    <div class="timeline-content-top">
+                      <span class="timeline-title">Out for Delivery with Delivery Agent</span>
+                      <span class="timeline-date">13 May 2025, 07:20 AM (Today)</span>
+                    </div>
+                    <div class="timeline-area"><i class="fas fa-location-dot"></i> Area: Local Delivery Hub, Connaught Place, New Delhi</div>
+                  </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="timeline-step pending">
+                  <div class="timeline-icon"><i class="fas fa-house-chimney"></i></div>
+                  <div class="timeline-content">
+                    <div class="timeline-content-top">
+                      <span class="timeline-title">Expected Delivery to Customer</span>
+                      <span class="timeline-date">13 May 2025, Expected by 05:00 PM</span>
+                    </div>
+                    <div class="timeline-area"><i class="fas fa-location-dot"></i> Area: <span class="cust-user-name-display">Priya Sharma</span> Destination Address, New Delhi, DL</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: My Wishlist -->
+          <div id="cust-section-wishlist" class="cust-section">
+            <!-- Section Title -->
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-heart" style="color:#ef4444;"></i> My Saved Wishlist — Verified Customer: <span class="cust-user-name-display">Priya Sharma</span></h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Saved products saved by <span class="cust-user-name-display">Priya Sharma</span> for future purchase.</p>
+                </div>
+                <span style="font-weight:700; font-size:0.85rem; background:#fee2e2; color:#dc2626; padding:0.4rem 0.9rem; border-radius:20px;">4 Saved Items</span>
+              </div>
+
+              <div class="wishlist-grid" id="custWishlistGridContainer">
+                <!-- Card 1 -->
+                <div class="wishlist-card">
+                  <div class="wishlist-img-box"><i class="fas fa-headphones"></i></div>
+                  <div class="wishlist-title">Wireless Noise-Cancelling Headphones Pro</div>
+                  <div class="wishlist-rating"><i class="fas fa-star"></i> 4.8 (142 reviews)</div>
+                  <div class="wishlist-price-row">
+                    <span class="wishlist-price">₹4,999</span>
+                    <span class="badge-status delivered">In Stock</span>
+                  </div>
+                  <div class="wishlist-actions">
+                    <button class="btn-move-cart"><i class="fas fa-cart-shopping"></i> Move to Cart</button>
+                    <button class="btn-remove-wishlist" title="Remove Item"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="wishlist-card">
+                  <div class="wishlist-img-box" style="color:#6366f1;"><i class="fas fa-keyboard"></i></div>
+                  <div class="wishlist-title">Mechanical RGB Gaming Keyboard</div>
+                  <div class="wishlist-rating"><i class="fas fa-star"></i> 4.7 (89 reviews)</div>
+                  <div class="wishlist-price-row">
+                    <span class="wishlist-price">₹3,299</span>
+                    <span class="badge-status delivered">In Stock</span>
+                  </div>
+                  <div class="wishlist-actions">
+                    <button class="btn-move-cart"><i class="fas fa-cart-shopping"></i> Move to Cart</button>
+                    <button class="btn-remove-wishlist" title="Remove Item"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="wishlist-card">
+                  <div class="wishlist-img-box" style="color:#a855f7;"><i class="fas fa-desktop"></i></div>
+                  <div class="wishlist-title">Ultra Slim 4K Portable Monitor</div>
+                  <div class="wishlist-rating"><i class="fas fa-star"></i> 4.9 (210 reviews)</div>
+                  <div class="wishlist-price-row">
+                    <span class="wishlist-price">₹12,499</span>
+                    <span class="badge-status processing">Low Stock</span>
+                  </div>
+                  <div class="wishlist-actions">
+                    <button class="btn-move-cart"><i class="fas fa-cart-shopping"></i> Move to Cart</button>
+                    <button class="btn-remove-wishlist" title="Remove Item"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="wishlist-card">
+                  <div class="wishlist-img-box" style="color:#d97706;"><i class="fas fa-lightbulb"></i></div>
+                  <div class="wishlist-title">Ergonomic LED Eye-Care Desk Lamp</div>
+                  <div class="wishlist-rating"><i class="fas fa-star"></i> 4.6 (56 reviews)</div>
+                  <div class="wishlist-price-row">
+                    <span class="wishlist-price">₹1,199</span>
+                    <span class="badge-status delivered">In Stock</span>
+                  </div>
+                  <div class="wishlist-actions">
+                    <button class="btn-move-cart"><i class="fas fa-cart-shopping"></i> Move to Cart</button>
+                    <button class="btn-remove-wishlist" title="Remove Item"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 5: Analytics -->
+          <div id="cust-section-analytics" class="cust-section">
+            <!-- Section Title -->
+            <div class="section-full-box">
+              <div style="margin-bottom:1rem;">
+                <h3 style="margin-bottom:2px;"><i class="fas fa-chart-pie" style="color:#6366f1;"></i> Fraud Statistics &amp; Security Awareness — <span class="cust-user-name-display">Priya Sharma</span></h3>
+                <p style="font-size:0.85rem; color:#64748b;">Understanding overall fraud patterns helps keep <span class="cust-user-name-display">Priya Sharma</span>'s account safe.</p>
+              </div>
+
+              <div class="eda-charts-grid">
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Fraud Rate by Card Type</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="custChartCardType"></canvas></div>
+                </div>
+                <div class="eda-chart-card">
+                  <div class="eda-chart-title">Top Fraud Types</div>
+                  <div class="eda-chart-canvas-wrapper"><canvas id="custChartFraudTypes"></canvas></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 6: Wallet (SAVED PAYMENT CARDS WITH SUITABLE DATA) -->
+          <div id="cust-section-wallet" class="cust-section">
+            <!-- Section Title -->
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-credit-card" style="color:#6366f1;"></i> Saved Payment Cards — Verified Customer: <span class="cust-user-name-display">Priya Sharma</span></h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Card details are tokenized, encrypted, and protected under PCI-DSS compliance for <span class="cust-user-name-display">Priya Sharma</span>.</p>
+                </div>
+                <button onclick="toggleInlineAddCardBox()" style="padding:0.55rem 1.2rem; border-radius:30px; border:none; background:#6366f1; color:#fff; font-weight:700; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px;"><i class="fas fa-plus"></i> Add New Card</button>
+              </div>
+
+              <!-- Floating Add New Card Box Section -->
+              <div id="addCardInlineFloatingBox" class="inline-floating-card-box" style="display:none; background:linear-gradient(135deg, #f8fafc, #edf2f7); border:2px dashed #818cf8; border-radius:24px; padding:1.8rem; margin-bottom:1.5rem; animation:modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1); box-shadow:0 12px 28px rgba(99,102,241,0.12);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                  <h4 style="font-size:1.1rem; color:#312e81; font-weight:800; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-credit-card" style="color:#6366f1;"></i> Floating Vault Setup — Add New Saved Payment Card
+                  </h4>
+                  <button type="button" onclick="toggleInlineAddCardBox()" style="background:none; border:none; color:#64748b; font-size:1.1rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+
+                <form id="inlineAddCardForm" onsubmit="submitAddSavedCardInline(event)">
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:1rem;">
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fas fa-university"></i> Bank Name</label>
+                      <input type="text" id="inlineCardBank" placeholder="e.g. HDFC Bank, ICICI Bank, SBI" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #cbd5e1; font-size:0.88rem;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fas fa-user"></i> Cardholder Name</label>
+                      <input type="text" id="inlineCardHolder" placeholder="e.g. Priya Sharma" value="Priya Sharma" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #cbd5e1; font-size:0.88rem;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fas fa-credit-card"></i> Card Number (16 Digits)</label>
+                      <input type="text" id="inlineCardNum" placeholder="4532 8912 3456 7890" maxlength="19" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #cbd5e1; font-size:0.88rem;" />
+                    </div>
+                  </div>
+
+                  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1.2rem;">
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fas fa-calendar"></i> Expiry (MM/YY)</label>
+                      <input type="text" id="inlineCardExpiry" placeholder="08/28" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #cbd5e1; font-size:0.88rem;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fas fa-lock"></i> CVV Code</label>
+                      <input type="password" id="inlineCardCvv" placeholder="•••" maxlength="4" required style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #cbd5e1; font-size:0.88rem;" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.8rem; font-weight:700; color:#334155;"><i class="fas fa-shield"></i> Protection Theme</label>
+                      <select id="inlineCardTheme" style="width:100%; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #cbd5e1; font-size:0.88rem; background:#fff;">
+                        <option value="hdfc-theme">Tokenized (HDFC)</option>
+                        <option value="icici-theme">3D-Secure (ICICI)</option>
+                        <option value="axis-theme">Virtual Masking (Axis)</option>
+                        <option value="sbi-theme">Insured (SBI)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style="display:flex; justify-content:flex-end; gap:0.8rem;">
+                    <button type="button" onclick="toggleInlineAddCardBox()" style="padding:0.5rem 1.2rem; border-radius:20px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font-size:0.85rem; font-weight:600;">Cancel</button>
+                    <button type="submit" style="padding:0.55rem 1.4rem; border-radius:20px; border:none; background:#6366f1; color:#fff; cursor:pointer; font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:6px;"><i class="fas fa-plus"></i> Save Encrypted Card</button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Saved Cards Grid -->
+              <div class="payment-cards-grid" id="savedCardsGridContainer">
+                
+                <!-- Card 1: HDFC Bank Credit Card -->
+                <div class="credit-card-item hdfc-theme">
+                  <div class="card-top-row">
+                    <div class="card-bank-name"><i class="fas fa-building-columns"></i> HDFC Bank Premium</div>
+                    <div class="card-network-logo" style="color:#818cf8;">RuPay</div>
+                  </div>
+                  <div class="card-chip-row">
+                    <div class="card-chip"></div>
+                    <i class="fas fa-wifi" style="transform:rotate(90deg); opacity:0.8;"></i>
+                  </div>
+                  <div class="card-number-display">•••• •••• •••• 4829</div>
+                  <div class="card-bottom-row">
+                    <div>
+                      <span class="card-holder-label">Card Holder</span>
+                      <span class="card-holder-val">Priya Sharma</span>
+                    </div>
+                    <div>
+                      <span class="card-holder-label">Expires</span>
+                      <span class="card-holder-val">08/28</span>
+                    </div>
+                  </div>
+                  <div class="card-security-badge">
+                    <i class="fas fa-shield-check" style="color:#34d399;"></i> Tokenized &amp; Biometric Protected
+                  </div>
+                </div>
+
+                <!-- Card 2: ICICI Bank MasterCard -->
+                <div class="credit-card-item icici-theme">
+                  <div class="card-top-row">
+                    <div class="card-bank-name"><i class="fas fa-building-columns"></i> ICICI Bank Coral</div>
+                    <div class="card-network-logo" style="color:#fbbf24;">MasterCard</div>
+                  </div>
+                  <div class="card-chip-row">
+                    <div class="card-chip"></div>
+                    <i class="fas fa-wifi" style="transform:rotate(90deg); opacity:0.8;"></i>
+                  </div>
+                  <div class="card-number-display">•••• •••• •••• 9104</div>
+                  <div class="card-bottom-row">
+                    <div>
+                      <span class="card-holder-label">Card Holder</span>
+                      <span class="card-holder-val">Priya Sharma</span>
+                    </div>
+                    <div>
+                      <span class="card-holder-label">Expires</span>
+                      <span class="card-holder-val">11/27</span>
+                    </div>
+                  </div>
+                  <div class="card-security-badge">
+                    <i class="fas fa-fingerprint" style="color:#fcd34d;"></i> 3D-Secure 2.0 Enabled
+                  </div>
+                </div>
+
+                <!-- Card 3: Axis Bank Visa -->
+                <div class="credit-card-item axis-theme">
+                  <div class="card-top-row">
+                    <div class="card-bank-name"><i class="fas fa-building-columns"></i> Axis Bank Neo</div>
+                    <div class="card-network-logo" style="color:#34d399;">Visa</div>
+                  </div>
+                  <div class="card-chip-row">
+                    <div class="card-chip"></div>
+                    <i class="fas fa-wifi" style="transform:rotate(90deg); opacity:0.8;"></i>
+                  </div>
+                  <div class="card-number-display">•••• •••• •••• 3371</div>
+                  <div class="card-bottom-row">
+                    <div>
+                      <span class="card-holder-label">Card Holder</span>
+                      <span class="card-holder-val">Priya Sharma</span>
+                    </div>
+                    <div>
+                      <span class="card-holder-label">Expires</span>
+                      <span class="card-holder-val">04/29</span>
+                    </div>
+                  </div>
+                  <div class="card-security-badge">
+                    <i class="fas fa-user-shield" style="color:#6ee7b7;"></i> Virtual Card Masking Active
+                  </div>
+                </div>
+
+                <!-- Card 4: SBI RuPay Card -->
+                <div class="credit-card-item sbi-theme">
+                  <div class="card-top-row">
+                    <div class="card-bank-name"><i class="fas fa-building-columns"></i> State Bank of India</div>
+                    <div class="card-network-logo" style="color:#93c5fd;">RuPay</div>
+                  </div>
+                  <div class="card-chip-row">
+                    <div class="card-chip"></div>
+                    <i class="fas fa-wifi" style="transform:rotate(90deg); opacity:0.8;"></i>
+                  </div>
+                  <div class="card-number-display">•••• •••• •••• 6520</div>
+                  <div class="card-bottom-row">
+                    <div>
+                      <span class="card-holder-label">Card Holder</span>
+                      <span class="card-holder-val">Priya Sharma</span>
+                    </div>
+                    <div>
+                      <span class="card-holder-label">Expires</span>
+                      <span class="card-holder-val">02/26</span>
+                    </div>
+                  </div>
+                  <div class="card-security-badge">
+                    <i class="fas fa-lock" style="color:#60a5fa;"></i> FraudShield Insured
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 7: Write Product Review -->
+          <div id="cust-section-write-review" class="cust-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-star" style="color:#f59e0b;"></i> Write Store Product Review &amp; Rating</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Submit your verified product review. Verified reviews are published directly to the Seller Store Listing.</p>
+                </div>
+                <div style="background:#ecfdf5; color:#047857; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700;">
+                  <i class="fas fa-shield-check"></i> FraudShield Verified Buyer Review
+                </div>
+              </div>
+
+              <!-- Write Review Form Container -->
+              <div style="background:linear-gradient(135deg, #fffbe8, #fef3c7); border:2px dashed #f59e0b; border-radius:24px; padding:1.8rem; box-shadow:0 12px 28px rgba(245,158,11,0.12);">
+                <form id="customerReviewForm" onsubmit="submitCustomerReview(event)">
+                  
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.2rem; margin-bottom:1.2rem;">
+                    <!-- Product Selection -->
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.85rem; font-weight:700; color:#78350f;"><i class="fas fa-box"></i> Select Purchased Product</label>
+                      <select id="reviewProdSelect" required style="width:100%; padding:0.65rem 0.9rem; border-radius:12px; border:1px solid #fcd34d; font-size:0.9rem; background:#fff;">
+                        <option value="Smart Watch X1">Smart Watch X1 (Black Edition)</option>
+                        <option value="Wireless Earbuds Pro">Wireless Earbuds Pro</option>
+                        <option value="USB-C 100W Quick Cable">USB-C 100W Quick Cable</option>
+                        <option value="Mechanical RGB Gaming Keyboard">Mechanical RGB Gaming Keyboard</option>
+                        <option value="Ultra Slim 4K Portable Monitor">Ultra Slim 4K Portable Monitor</option>
+                        <option value="Ergonomic LED Eye-Care Desk Lamp">Ergonomic LED Eye-Care Desk Lamp</option>
+                      </select>
+                    </div>
+
+                    <!-- Customer Reviewer Display -->
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.85rem; font-weight:700; color:#78350f;"><i class="fas fa-user-check"></i> Reviewing as Verified Customer</label>
+                      <div style="padding:0.65rem 0.9rem; border-radius:12px; border:1px solid #fcd34d; background:#fff; font-weight:700; font-size:0.9rem; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-circle-check" style="color:#10b981;"></i> <span class="cust-user-name-display">Priya Sharma</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Star Rating Input -->
+                  <div class="form-group" style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.85rem; font-weight:700; color:#78350f; display:block; margin-bottom:0.4rem;"><i class="fas fa-star" style="color:#f59e0b;"></i> Select Rating (1 to 5 Stars)</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                      <select id="reviewRatingSelect" required style="width:180px; padding:0.6rem 0.9rem; border-radius:12px; border:1px solid #fcd34d; font-size:0.9rem; font-weight:700; background:#fff;">
+                        <option value="5" selected>★★★★★ 5.0 (Excellent)</option>
+                        <option value="4">★★★★☆ 4.0 (Good)</option>
+                        <option value="3">★★★☆☆ 3.0 (Average)</option>
+                        <option value="2">★★☆☆☆ 2.0 (Poor)</option>
+                        <option value="1">★☆☆☆☆ 1.0 (Bad)</option>
+                      </select>
+                      <span style="font-size:0.85rem; color:#92400e; font-weight:600;"><i class="fas fa-shield-alt" style="color:#10b981;"></i> FraudShield Rating Guard Active</span>
+                    </div>
+                  </div>
+
+                  <!-- Review Title -->
+                  <div class="form-group" style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.85rem; font-weight:700; color:#78350f;"><i class="fas fa-heading"></i> Review Title / Headline</label>
+                    <input type="text" id="reviewTitleInput" placeholder="e.g. Excellent build quality & super fast delivery!" required style="width:100%; padding:0.65rem 0.9rem; border-radius:12px; border:1px solid #fcd34d; font-size:0.9rem; background:#fff;" />
+                  </div>
+
+                  <!-- Review Textarea -->
+                  <div class="form-group" style="margin-bottom:1.5rem;">
+                    <label style="font-size:0.85rem; font-weight:700; color:#78350f;"><i class="fas fa-comment-dots"></i> Detailed Product Experience &amp; Feedback</label>
+                    <textarea id="reviewTextarea" rows="4" placeholder="Describe your experience with the product quality, packaging, delivery speed, and overall performance..." required style="width:100%; padding:0.8rem 0.9rem; border-radius:14px; border:1px solid #fcd34d; font-size:0.9rem; background:#fff; font-family:inherit;"></textarea>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                    <div style="font-size:0.8rem; color:#92400e; display:flex; align-items:center; gap:6px;">
+                      <i class="fas fa-paper-plane" style="color:#d97706;"></i> Review will be instantly published to the Seller's Verified Store Listing.
+                    </div>
+                    <button type="submit" style="padding:0.75rem 1.8rem; border-radius:30px; border:none; background:#f59e0b; color:#fff; font-size:0.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(245,158,11,0.25);">
+                      <i class="fas fa-paper-plane"></i> Submit &amp; Send to Seller Dashboard
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 8: Message Seller -->
+          <div id="cust-section-contact-seller" class="cust-section">
+            <div class="section-full-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                <div>
+                  <h3 style="margin-bottom:2px;"><i class="fas fa-comment-dots" style="color:#6366f1;"></i> Send Direct Inquiry Message to Seller</h3>
+                  <p style="font-size:0.85rem; color:#64748b;">Communicate directly with the store owner regarding order status, product customization, or shipping inquiries.</p>
+                </div>
+                <div style="background:#e0f2fe; color:#0369a1; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700;">
+                  <i class="fas fa-user-shield"></i> FraudShield Active Phishing Filter
+                </div>
+              </div>
+
+              <!-- Message Form Container -->
+              <div style="background:linear-gradient(135deg, #f0f9ff, #e0f2fe); border:2px dashed #6366f1; border-radius:24px; padding:1.8rem; box-shadow:0 12px 28px rgba(99,102,241,0.12);">
+                <form id="customerMessageForm" onsubmit="submitCustomerMessage(event)">
+                  
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.2rem; margin-bottom:1.2rem;">
+                    <!-- Order Selection -->
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.85rem; font-weight:700; color:#1e1b4b;"><i class="fas fa-hashtag"></i> Select Related Order / Subject</label>
+                      <select id="msgOrderSelect" required style="width:100%; padding:0.65rem 0.9rem; border-radius:12px; border:1px solid #818cf8; font-size:0.9rem; background:#fff;">
+                        <option value="#ORD-7832 (Smart Watch X1)">Order #ORD-7832 (Smart Watch X1)</option>
+                        <option value="#ORD-7831 (Wireless Earbuds Pro)">Order #ORD-7831 (Wireless Earbuds Pro)</option>
+                        <option value="#ORD-7830 (USB-C Cable)">Order #ORD-7830 (USB-C 100W Quick Cable)</option>
+                        <option value="General Product & Shipping Inquiry">General Product &amp; Shipping Inquiry</option>
+                      </select>
+                    </div>
+
+                    <!-- Customer Identity Display -->
+                    <div class="form-group" style="margin:0;">
+                      <label style="font-size:0.85rem; font-weight:700; color:#1e1b4b;"><i class="fas fa-user"></i> Messaging as Verified Customer</label>
+                      <div style="padding:0.65rem 0.9rem; border-radius:12px; border:1px solid #818cf8; background:#fff; font-weight:700; font-size:0.9rem; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-circle-check" style="color:#10b981;"></i> <span class="cust-user-name-display">Priya Sharma</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Message Textarea -->
+                  <div class="form-group" style="margin-bottom:1.5rem;">
+                    <label style="font-size:0.85rem; font-weight:700; color:#1e1b4b;"><i class="fas fa-envelope-open-text"></i> Message Content for Seller</label>
+                    <textarea id="msgBodyTextarea" rows="4" placeholder="Type your message to the seller (e.g. Could you please confirm tracking updates, replacement accessories, or delivery instructions?)..." required style="width:100%; padding:0.8rem 0.9rem; border-radius:14px; border:1px solid #818cf8; font-size:0.9rem; background:#fff; font-family:inherit;"></textarea>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                    <div style="font-size:0.8rem; color:#3730a3; display:flex; align-items:center; gap:6px;">
+                      <i class="fas fa-paper-plane" style="color:#6366f1;"></i> Message will be delivered directly to the Seller Dashboard Inbox.
+                    </div>
+                    <button type="submit" style="padding:0.75rem 1.8rem; border-radius:30px; border:none; background:#6366f1; color:#fff; font-size:0.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(99,102,241,0.25);">
+                      <i class="fas fa-paper-plane"></i> Send Message to Seller Dashboard
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── ADD NEW SAVED CARD OVERLAY ─── -->
+  <div class="overlay" id="addCardModalOverlay">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h2><i class="fas fa-credit-card" style="color:#6366f1;"></i> Add Saved Payment Card</h2>
+        <button class="close-btn" onclick="closeAddCardModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addCardForm" onsubmit="submitAddSavedCard(event)">
+        <div class="form-group">
+          <label><i class="fas fa-university"></i> Bank Name</label>
+          <input type="text" id="newCardBank" placeholder="e.g. HDFC Bank, ICICI Bank, SBI" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Cardholder Name</label>
+          <input type="text" id="newCardHolder" placeholder="e.g. Priya Sharma" value="Priya Sharma" required />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-credit-card"></i> Card Number (16 Digits)</label>
+          <input type="text" id="newCardNum" placeholder="4532 8912 3456 7890" maxlength="19" required />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> Expiry (MM/YY)</label>
+            <input type="text" id="newCardExpiry" placeholder="08/28" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> CVV Security Code</label>
+            <input type="password" id="newCardCvv" placeholder="•••" maxlength="4" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-shield"></i> Security Protection Theme</label>
+          <select id="newCardTheme">
+            <option value="hdfc-theme">Tokenized &amp; Biometric Protected (HDFC Theme)</option>
+            <option value="icici-theme">3D-Secure 2.0 Enabled (ICICI Theme)</option>
+            <option value="axis-theme">Virtual Card Masking Active (Axis Theme)</option>
+            <option value="sbi-theme">FraudShield Insured (SBI Theme)</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-btn" style="background:#6366f1;"><i class="fas fa-plus"></i> Save Encrypted Card</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Application Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
